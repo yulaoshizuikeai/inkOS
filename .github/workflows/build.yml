@@ -21,17 +21,32 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Keystore
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$RELEASE_KEYSTORE_BASE64" ]; then
+            echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > $GITHUB_WORKSPACE/release.keystore
+          else
+            keytool -genkeypair -v -keystore $GITHUB_WORKSPACE/release.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+            echo "KEYSTORE_PASSWORD=android" >> $GITHUB_ENV
+            echo "KEY_ALIAS=androiddebugkey" >> $GITHUB_ENV
+            echo "KEY_PASSWORD=android" >> $GITHUB_ENV
+          fi
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug -x test -x lint -x lintVitalRelease
+      - name: Build APKs
+        env:
+          KEYSTORE_FILE: ${{ github.workspace }}/release.keystore
+        run: ./gradlew assembleDebug assembleRelease -x test -x lint
 
-      - name: Upload Debug APK Artifact
+      - name: Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: inkOS-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: inkOS-apks
+          path: app/build/outputs/apk/**/*.apk
