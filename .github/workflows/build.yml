@@ -27,17 +27,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Show dependency resolution info
+        run: ./gradlew dependencies --configuration releaseRuntimeClasspath 2>&1 | tail -50 || true
+
       - name: Build Debug APK
-        run: |
-          ./gradlew assembleDebug 2>&1 | tee build_output.txt
-          EXIT_CODE=${PIPESTATUS[0]}
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "## Build Failure Summary" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            grep -E "(error:|e:.*\.kt|FAILURE:|Could not resolve|Unresolved reference|> Task|BUILD FAILED)" build_output.txt | tail -60 >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            exit $EXIT_CODE
-          fi
+        run: ./gradlew assembleDebug --info 2>&1 | tee build_output.txt; EXIT=${PIPESTATUS[0]}; if [ $EXIT -ne 0 ]; then grep -E "(FAILED|error:|e:.*\.kt|Could not resolve|> Could not|Unresolved)" build_output.txt | head -80; exit $EXIT; fi
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
