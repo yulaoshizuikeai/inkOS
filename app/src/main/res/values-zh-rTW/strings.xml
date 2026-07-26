@@ -829,5 +829,7 @@
     <string name="lang_english">English</string>
     <string name="lang_zh_cn">簡體中文</string>
     <string name="lang_zh_tw">繁體中文</string>
+    <string name="auto_front_on_unlock">亮屏解鎖自動調出 inkOS</string>
+    <string name="desc_auto_front_on_unlock">每次點亮螢幕或解鎖設備時，自動將 inkOS 浮現至桌面最前。</string>
 
 </resources>
