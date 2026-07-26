@@ -1002,6 +1002,10 @@ class Prefs(val context: Context) {
         get() = prefs.getString(Constants.PrefKeys.APP_LANGUAGE, "system") ?: "system"
         set(value) = prefs.edit { putString(Constants.PrefKeys.APP_LANGUAGE, value) }
 
+    var autoFrontOnUnlock: Boolean
+        get() = prefs.getBoolean(Constants.PrefKeys.AUTO_FRONT_ON_UNLOCK, true)
+        set(value) = prefs.edit { putBoolean(Constants.PrefKeys.AUTO_FRONT_ON_UNLOCK, value) }
+
     var showAndroidWidget: Boolean
         get() = bottomWidgetType == Constants.BottomWidgetType.AndroidWidget.value
         set(value) {

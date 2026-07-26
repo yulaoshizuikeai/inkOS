@@ -205,6 +205,7 @@ object Constants {
         const val WEATHER_CACHE_HUMIDITY = "WEATHER_CACHE_HUMIDITY"
         const val WEATHER_CACHE_TIME = "WEATHER_CACHE_TIME"
         const val APP_LANGUAGE = "APP_LANGUAGE"
+        const val AUTO_FRONT_ON_UNLOCK = "AUTO_FRONT_ON_UNLOCK"
     }
 
     /** Events filter: 0=24h, 1=1 week, 2=2 weeks, 3=1 month */

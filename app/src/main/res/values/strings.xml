@@ -825,7 +825,9 @@
     <string name="write_settings_permission_message">Brightness control requires permission to modify system settings. You will be taken to settings to grant this permission.</string>
 
     <string name="app_language">Language / 语言</string>
-    <string name="desc_app_language">App display language (语言选择)</string>
+    <string name="desc_app_language">Select in-app language for inkOS settings and interface</string>
+    <string name="auto_front_on_unlock">Auto Front on Screen Unlock</string>
+    <string name="desc_auto_front_on_unlock">Automatically open inkOS whenever the screen is turned on or unlocked.</string>
     <string name="lang_system">System Default (系统默认)</string>
     <string name="lang_english">English</string>
     <string name="lang_zh_cn">简体中文</string>
