@@ -1,57 +1,52 @@
 # gradle/libs.versions.toml
 
 [versions]
-agp = "8.8.0"
-kotlin = "2.0.21"
+agp = "8.3.2"
+kotlin = "1.9.25"
 
 # AndroidX Core and AppCompat
-core-ktx = "1.17.0"
-appcompat = "1.7.1"
-recyclerview = "1.4.0"
+core-ktx = "1.13.1"
+appcompat = "1.7.0"
+recyclerview = "1.3.2"
 paletteKtx = "1.0.0"
 
 # Android Lifecycle
-lifecycle-viewmodel-ktx = "2.10.0"
+lifecycle-viewmodel-ktx = "2.8.3"
 
 # Navigation
-navigation-fragment-ktx = "2.9.7"
-navigation-ui-ktx = "2.9.7"
-navigation-testing = "2.9.7"
+navigation-fragment-ktx = "2.7.7"
+navigation-ui-ktx = "2.7.7"
+navigation-testing = "2.7.7"
 
 # Work Manager
-work-runtime-ktx = "2.11.1"
+work-runtime-ktx = "2.9.1"
 
 # ConstraintLayout
-constraintlayout = "2.2.1"
-constraintlayout-compose = "1.1.1"
+constraintlayout = "2.1.4"
+constraintlayout-compose = "1.0.1"
 
 # Compose Versions
-activity-compose = "1.12.4"
-compose-android = "1.10.4"
-compose-material3 = "1.4.0"
-compose-animation = "1.10.4"
-compose-ui = "1.10.4"
-compose-foundation = "1.10.4"
-compose-ui-tooling = "1.10.4"
+activity-compose = "1.9.3"
+compose-bom = "2024.09.03"
 
 # Glance (AppWidgets)
-glance-appwidget = "1.1.1"
+glance-appwidget = "1.1.0"
 
 # Other Libraries
-commons-text = "1.15.0"
-gson = "2.13.2"
+commons-text = "1.12.0"
+gson = "2.11.0"
 biometric = "1.1.0"
-material-icons-extended = "1.7.8"
+material-icons-extended = "1.7.3"
 glide = "4.16.0"
 
 # AndroidX Test Libraries
-espresso = "3.7.0"
-test-core-ktx = "1.7.0"
-test-runner = "1.7.0"
-test-rules = "1.7.0"
-fragment-testing = "1.8.9"
-ui-test-junit4 = "1.10.4"
-ui-test-manifest = "1.10.4"
+espresso = "3.6.1"
+test-core-ktx = "1.6.1"
+test-runner = "1.6.2"
+test-rules = "1.6.1"
+fragment-testing = "1.8.3"
+ui-test-junit4 = "1.7.3"
+ui-test-manifest = "1.7.3"
 
 [libraries]
 # Core Libraries
@@ -75,14 +70,17 @@ work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose" }
 
-# Compose
+# Compose (using BOM)
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
-compose-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "compose-android" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "compose-animation" }
-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-ui" }
-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose-foundation" }
-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose-ui-tooling" }
+compose-android = { group = "androidx.compose.runtime", name = "runtime-android" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-animation = { group = "androidx.compose.animation", name = "animation" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
 # Glance (AppWidgets)
 glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance-appwidget" }
@@ -102,8 +100,6 @@ test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "tes
 test-runner = { group = "androidx.test", name = "runner", version.ref = "test-runner" }
 test-rules = { group = "androidx.test", name = "rules", version.ref = "test-rules" }
 fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragment-testing" }
-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "ui-test-junit4" }
-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "ui-test-manifest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
