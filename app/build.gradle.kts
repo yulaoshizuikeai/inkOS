@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.github.gezimos.inkos"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "app.inkos"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 101013
         versionName = "0.6"
     }
