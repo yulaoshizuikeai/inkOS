@@ -468,6 +468,16 @@ fun HomeUI(
                         )
                     }
                 }
+                Constants.BottomWidgetType.Weather.value -> {
+                    Spacer(modifier = Modifier.height(12.dp.scaled(screenScale)))
+                    WeatherBlock(
+                        state = state,
+                        onClick = callbacks.onBottomWidgetClick,
+                        isFocused = showDpadMode && focusZone == FocusZone.QUOTE,
+                        showTextIslands = state.textIslands,
+                        showEditMode = showEditMode
+                    )
+                }
                 Constants.BottomWidgetType.Disabled.value -> {
                     if (showEditMode) {
                         Spacer(modifier = Modifier.height(12.dp.scaled(screenScale)))
@@ -2380,6 +2390,85 @@ private fun TotalUsageBlock(
     ) {
         Text(
             text = state.totalUsageText,
+            style = TextStyle(
+                color = when {
+                    isFocused && showTextIslands -> focusTextColor
+                    isFocused -> Theme.colors.background
+                    showTextIslands -> islandTextColor
+                    else -> Theme.colors.text
+                },
+                fontSize = scaledQuoteSize.sp,
+                fontFamily = quoteFontFamily,
+                textAlign = textAlign
+            ),
+            modifier = Modifier
+                .wrapContentSize()
+                .then(
+                    if (isFocused || showTextIslands) {
+                        val bgColor = when {
+                            isFocused && showTextIslands -> focusBackgroundColor
+                            isFocused -> highlightColor
+                            else -> islandBackgroundColor
+                        }
+                        Modifier.background(bgColor, bgShape).padding(horizontal = 8.dp)
+                    } else {
+                        Modifier
+                    }
+                )
+                .clickableNoRipple(onClick),
+            textAlign = textAlign
+        )
+    }
+}
+
+@Composable
+private fun WeatherBlock(
+    state: HomeUiRenderState,
+    onClick: () -> Unit,
+    isFocused: Boolean = false,
+    showTextIslands: Boolean = false,
+    showEditMode: Boolean = false
+) {
+    val context = LocalContext.current
+    val quoteTypeface = remember(state.quoteFont, state.quoteCustomFontPath) {
+        state.quoteFont.getFont(context, state.quoteCustomFontPath)
+    }
+    val quoteFontFamily = quoteTypeface?.let { FontFamily(it) } ?: FontFamily.Default
+    val scaledQuoteSize = state.quoteSize * rememberScreenScale()
+
+    val textAlign = when (state.quoteAlignment) {
+        0 -> TextAlign.Start
+        2 -> TextAlign.End
+        else -> TextAlign.Center
+    }
+    val blockAlignment = when (state.quoteAlignment) {
+        0 -> Alignment.Start
+        2 -> Alignment.End
+        else -> Alignment.CenterHorizontally
+    }
+    val highlightColor = Theme.colors.text
+    val islandBackgroundColor = if (state.textIslandsInverted) Theme.colors.background else Theme.colors.text
+    val islandTextColor = if (state.textIslandsInverted) Theme.colors.text else Theme.colors.background
+    val focusBackgroundColor = if (showTextIslands) (if (state.textIslandsInverted) Theme.colors.text else Theme.colors.background) else highlightColor
+    val focusTextColor = if (showTextIslands) (if (state.textIslandsInverted) Theme.colors.background else Theme.colors.text) else Theme.colors.background
+
+    val bgShape = remember(state.textIslandsShape) {
+        ShapeHelper.getRoundedCornerShape(
+            textIslandsShape = state.textIslandsShape,
+            pillRadius = 50.dp
+        )
+    }
+
+    val textToDisplay = if (state.weatherLoading) "正在加载天气..." else state.weatherData.getFormattedString()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer(alpha = if (showEditMode && state.bottomWidgetType != Constants.BottomWidgetType.Weather.value) 0.5f else 1f),
+        horizontalAlignment = blockAlignment
+    ) {
+        Text(
+            text = textToDisplay,
             style = TextStyle(
                 color = when {
                     isFocused && showTextIslands -> focusTextColor
@@ -4372,7 +4461,10 @@ data class HomeUiRenderState(
     val shortcutPageDots: Boolean = false,
     val shortcutHideOutline: Boolean = false,
     // Total Usage widget
-    val totalUsageText: String = "0min"
+    val totalUsageText: String = "0min",
+    // Weather widget
+    val weatherData: com.github.gezimos.inkos.helper.WeatherData = com.github.gezimos.inkos.helper.WeatherData(),
+    val weatherLoading: Boolean = false
 )
 data class HomeUiCallbacks(
     val onAppClick: (HomeAppUiState) -> Unit,

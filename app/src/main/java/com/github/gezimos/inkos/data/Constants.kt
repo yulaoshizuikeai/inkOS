@@ -194,6 +194,17 @@ object Constants {
         const val SHORTCUT_RIGHT_ICON = "SHORTCUT_RIGHT_ICON"
         const val SHORTCUT_RIGHT_ACTION = "SHORTCUT_RIGHT_ACTION"
         const val SHORTCUT_PAGE_DOTS = "SHORTCUT_PAGE_DOTS"
+        const val WEATHER_ENABLED = "WEATHER_ENABLED"
+        const val WEATHER_UNIT = "WEATHER_UNIT"
+        const val WEATHER_CUSTOM_CITY = "WEATHER_CUSTOM_CITY"
+        const val WEATHER_AUTO_REFRESH_HOURS = "WEATHER_AUTO_REFRESH_HOURS"
+        const val WEATHER_CACHE_CITY = "WEATHER_CACHE_CITY"
+        const val WEATHER_CACHE_TEMP = "WEATHER_CACHE_TEMP"
+        const val WEATHER_CACHE_DESC = "WEATHER_CACHE_DESC"
+        const val WEATHER_CACHE_CODE = "WEATHER_CACHE_CODE"
+        const val WEATHER_CACHE_HUMIDITY = "WEATHER_CACHE_HUMIDITY"
+        const val WEATHER_CACHE_TIME = "WEATHER_CACHE_TIME"
+        const val APP_LANGUAGE = "APP_LANGUAGE"
     }
 
     /** Events filter: 0=24h, 1=1 week, 2=2 weeks, 3=1 month */
@@ -211,7 +222,8 @@ object Constants {
         AndroidWidget("android_widget"),
         Shortcuts("search"), // value kept as "search" for backward compat
         TotalUsage("total_usage"),
-        PageDots("page_dots")
+        PageDots("page_dots"),
+        Weather("weather")
     }
 
     enum class NotificationIndicator(val symbol: String, val label: String, val isSuperscript: Boolean) {

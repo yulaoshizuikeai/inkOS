@@ -831,6 +831,10 @@ class HomeFragmentCompose : Fragment() {
                     findNavController().navigate(R.id.recentsFragment)
                 } catch (_: Exception) {}
             }
+            Constants.BottomWidgetType.Weather.value -> {
+                viewModel.fetchWeather(forceRefresh = true)
+                com.github.gezimos.common.showShortToast(requireContext(), getString(R.string.weather_refreshing))
+            }
             else -> {}
         }
     }

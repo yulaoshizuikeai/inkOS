@@ -395,8 +395,16 @@ class MainActivity : AppCompatActivity() {
         } catch (_: Exception) {}
     }
 
+    override fun attachBaseContext(newBase: android.content.Context) {
+        val prefs = Prefs(newBase)
+        val context = com.github.gezimos.inkos.helper.LocaleHelper.applyLocale(newBase, prefs.appLanguage)
+        super.attachBaseContext(context)
+    }
+
     @RequiresPermission(anyOf = ["android.permission.READ_WALLPAPER_INTERNAL", Manifest.permission.MANAGE_EXTERNAL_STORAGE])
     override fun onCreate(savedInstanceState: Bundle?) {
+        prefs = Prefs(this)
+        com.github.gezimos.inkos.helper.LocaleHelper.applyLocale(this, prefs.appLanguage)
         super.onCreate(savedInstanceState)
 
         // --- Crash loop detection ---

@@ -170,6 +170,12 @@
     <string name="bottom_widget_shortcuts">Shortcuts</string>
     <string name="bottom_widget_total_usage">Total Usage</string>
     <string name="bottom_widget_page_dots">Page Dots</string>
+    <string name="bottom_widget_weather">Weather</string>
+    <string name="weather_settings">Weather Settings</string>
+    <string name="weather_unit">Temperature Unit</string>
+    <string name="weather_custom_city">Custom City (Auto IP if empty)</string>
+    <string name="weather_refresh_now">Refresh Weather Now</string>
+    <string name="weather_refreshing">Refreshing weather...</string>
     <string name="show_quote">Show Quote</string>
     <string name="show_audio_widget">Show Audio Widget</string>
     <string name="show_android_widget">Show Android Widget</string>
@@ -817,5 +823,12 @@
     <string name="btn_allow">Allow</string>
     <string name="write_settings_permission_title">Modify System Settings</string>
     <string name="write_settings_permission_message">Brightness control requires permission to modify system settings. You will be taken to settings to grant this permission.</string>
+
+    <string name="app_language">Language / 语言</string>
+    <string name="desc_app_language">App display language (语言选择)</string>
+    <string name="lang_system">System Default (系统默认)</string>
+    <string name="lang_english">English</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="lang_zh_tw">繁體中文</string>
 
 </resources>

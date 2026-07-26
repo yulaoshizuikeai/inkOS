@@ -611,7 +611,8 @@ object EditModeHelper {
             context.getString(R.string.bottom_widget_android),
             context.getString(R.string.bottom_widget_shortcuts),
             context.getString(R.string.bottom_widget_total_usage),
-            context.getString(R.string.bottom_widget_page_dots)
+            context.getString(R.string.bottom_widget_page_dots),
+            context.getString(R.string.bottom_widget_weather)
         )
         val bottomWidgetValues = listOf(
             Constants.BottomWidgetType.Disabled.value,
@@ -620,7 +621,8 @@ object EditModeHelper {
             Constants.BottomWidgetType.AndroidWidget.value,
             Constants.BottomWidgetType.Shortcuts.value,
             Constants.BottomWidgetType.TotalUsage.value,
-            Constants.BottomWidgetType.PageDots.value
+            Constants.BottomWidgetType.PageDots.value,
+            Constants.BottomWidgetType.Weather.value
         )
         showDialog(context, prefs) {
             val selectedTabIndex = remember { mutableStateOf(0) }
@@ -657,6 +659,27 @@ object EditModeHelper {
                             )
                         }
                         when (uiState.bottomWidgetType) {
+                            Constants.BottomWidgetType.Weather.value -> {
+                                SettingRow(label = stringResource(R.string.weather_unit), value = "°${prefs.weatherUnit}") {
+                                    val nextUnit = if (prefs.weatherUnit == "C") "F" else "C"
+                                    prefs.weatherUnit = nextUnit
+                                    vm.fetchWeather(forceRefresh = true)
+                                    onUpdate()
+                                }
+                                SettingRow(label = stringResource(R.string.weather_custom_city), value = prefs.weatherCustomCity.ifBlank { "Auto (IP)" }) {
+                                    currentSheet?.dismiss()
+                                    dialogManager.showInputDialog(context = context, title = context.getString(R.string.weather_custom_city), initialValue = prefs.weatherCustomCity) { city ->
+                                        prefs.weatherCustomCity = city.trim()
+                                        vm.fetchWeather(forceRefresh = true)
+                                        onUpdate()
+                                    }
+                                }
+                                SettingRow(label = stringResource(R.string.weather_refresh_now), value = "") {
+                                    vm.fetchWeather(forceRefresh = true)
+                                    com.github.gezimos.common.showShortToast(context, context.getString(R.string.weather_refreshing))
+                                    onUpdate()
+                                }
+                            }
                             Constants.BottomWidgetType.Quote.value -> {
                                 SettingRow(label = stringResource(R.string.quote_text), value = uiState.quoteText) {
                                     currentSheet?.dismiss()

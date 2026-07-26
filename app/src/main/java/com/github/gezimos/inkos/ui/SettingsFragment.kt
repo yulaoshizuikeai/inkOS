@@ -806,6 +806,38 @@ class SettingsFragment : Fragment() {
         }
         val uiState by viewModel.homeUiState.collectAsState()
         Column(modifier = Modifier.fillMaxWidth()) {
+            val langOptions = listOf(
+                stringResource(R.string.lang_system),
+                stringResource(R.string.lang_english),
+                stringResource(R.string.lang_zh_cn),
+                stringResource(R.string.lang_zh_tw)
+            )
+            val langValues = listOf("system", "en", "zh_cn", "zh_tw")
+            val currentLangIdx = langValues.indexOf(prefs.appLanguage).coerceAtLeast(0)
+
+            SettingsSelect(
+                title = stringResource(R.string.app_language),
+                option = langOptions.getOrElse(currentLangIdx) { stringResource(R.string.lang_system) },
+                fontSize = titleFontSize,
+                description = stringResource(R.string.desc_app_language),
+                onClick = {
+                    dialogBuilder.showSingleChoiceDialog(
+                        context = requireContext(),
+                        options = langOptions.toTypedArray(),
+                        titleResId = R.string.app_language,
+                        selectedIndex = currentLangIdx,
+                        onItemSelected = { selected ->
+                            val idx = langOptions.indexOf(selected)
+                            if (idx >= 0 && langValues[idx] != prefs.appLanguage) {
+                                prefs.appLanguage = langValues[idx]
+                                com.github.gezimos.inkos.helper.LocaleHelper.applyLocale(requireContext(), prefs.appLanguage)
+                                requireActivity().recreate()
+                            }
+                        }
+                    )
+                }
+            )
+
             SettingsSwitch(
                 text = stringResource(R.string.lock_home_apps), fontSize = titleFontSize,
                 description = stringResource(R.string.desc_lock_home_apps),
@@ -1071,13 +1103,13 @@ class SettingsFragment : Fragment() {
                 stringResource(R.string.bottom_widget_disabled), stringResource(R.string.bottom_widget_quote),
                 stringResource(R.string.bottom_widget_events), stringResource(R.string.bottom_widget_android),
                 stringResource(R.string.bottom_widget_shortcuts), stringResource(R.string.bottom_widget_total_usage),
-                stringResource(R.string.bottom_widget_page_dots)
+                stringResource(R.string.bottom_widget_page_dots), stringResource(R.string.bottom_widget_weather)
             )
             val bottomWidgetValues = listOf(
                 Constants.BottomWidgetType.Disabled.value, Constants.BottomWidgetType.Quote.value,
                 Constants.BottomWidgetType.Events.value, Constants.BottomWidgetType.AndroidWidget.value,
                 Constants.BottomWidgetType.Shortcuts.value, Constants.BottomWidgetType.TotalUsage.value,
-                Constants.BottomWidgetType.PageDots.value
+                Constants.BottomWidgetType.PageDots.value, Constants.BottomWidgetType.Weather.value
             )
             val currentBottomWidgetIndex = bottomWidgetValues.indexOf(homeUiState.bottomWidgetType).coerceAtLeast(0)
             SettingsSelect(

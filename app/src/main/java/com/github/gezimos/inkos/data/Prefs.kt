@@ -958,6 +958,50 @@ class Prefs(val context: Context) {
         }
         set(value) = prefs.edit { putString(Constants.PrefKeys.BOTTOM_WIDGET_TYPE, value) }
 
+    var weatherEnabled: Boolean
+        get() = prefs.getBoolean(Constants.PrefKeys.WEATHER_ENABLED, true)
+        set(value) = prefs.edit { putBoolean(Constants.PrefKeys.WEATHER_ENABLED, value) }
+
+    var weatherUnit: String
+        get() = prefs.getString(Constants.PrefKeys.WEATHER_UNIT, "C") ?: "C"
+        set(value) = prefs.edit { putString(Constants.PrefKeys.WEATHER_UNIT, value) }
+
+    var weatherCustomCity: String
+        get() = prefs.getString(Constants.PrefKeys.WEATHER_CUSTOM_CITY, "") ?: ""
+        set(value) = prefs.edit { putString(Constants.PrefKeys.WEATHER_CUSTOM_CITY, value) }
+
+    var weatherAutoRefreshHours: Int
+        get() = prefs.getInt(Constants.PrefKeys.WEATHER_AUTO_REFRESH_HOURS, 1)
+        set(value) = prefs.edit { putInt(Constants.PrefKeys.WEATHER_AUTO_REFRESH_HOURS, value) }
+
+    var weatherCacheCity: String
+        get() = prefs.getString(Constants.PrefKeys.WEATHER_CACHE_CITY, "") ?: ""
+        set(value) = prefs.edit { putString(Constants.PrefKeys.WEATHER_CACHE_CITY, value) }
+
+    var weatherCacheTemp: Double
+        get() = prefs.getFloat(Constants.PrefKeys.WEATHER_CACHE_TEMP, 0f).toDouble()
+        set(value) = prefs.edit { putFloat(Constants.PrefKeys.WEATHER_CACHE_TEMP, value.toFloat()) }
+
+    var weatherCacheDesc: String
+        get() = prefs.getString(Constants.PrefKeys.WEATHER_CACHE_DESC, "") ?: ""
+        set(value) = prefs.edit { putString(Constants.PrefKeys.WEATHER_CACHE_DESC, value) }
+
+    var weatherCacheCode: Int
+        get() = prefs.getInt(Constants.PrefKeys.WEATHER_CACHE_CODE, 0)
+        set(value) = prefs.edit { putInt(Constants.PrefKeys.WEATHER_CACHE_CODE, value) }
+
+    var weatherCacheHumidity: Int
+        get() = prefs.getInt(Constants.PrefKeys.WEATHER_CACHE_HUMIDITY, 0)
+        set(value) = prefs.edit { putInt(Constants.PrefKeys.WEATHER_CACHE_HUMIDITY, value) }
+
+    var weatherCacheTime: Long
+        get() = prefs.getLong(Constants.PrefKeys.WEATHER_CACHE_TIME, 0L)
+        set(value) = prefs.edit { putLong(Constants.PrefKeys.WEATHER_CACHE_TIME, value) }
+
+    var appLanguage: String
+        get() = prefs.getString(Constants.PrefKeys.APP_LANGUAGE, "system") ?: "system"
+        set(value) = prefs.edit { putString(Constants.PrefKeys.APP_LANGUAGE, value) }
+
     var showAndroidWidget: Boolean
         get() = bottomWidgetType == Constants.BottomWidgetType.AndroidWidget.value
         set(value) {

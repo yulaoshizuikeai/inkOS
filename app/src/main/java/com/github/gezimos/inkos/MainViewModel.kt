@@ -20,6 +20,8 @@ import com.github.gezimos.inkos.data.Constants.PrefKeys
 import com.github.gezimos.inkos.helper.AudioWidgetHelper
 import com.github.gezimos.inkos.helper.CalendarEventsHelper
 import com.github.gezimos.inkos.helper.IconUtility
+import com.github.gezimos.inkos.helper.WeatherRepository
+import com.github.gezimos.inkos.helper.WeatherData
 import com.github.gezimos.inkos.helper.isinkosDefault
 import com.github.gezimos.inkos.services.NotificationManager
 import com.github.gezimos.inkos.ui.compose.HomeUiRenderState
@@ -135,6 +137,8 @@ data class HomeUiState(
     val homeReset: Boolean = false,
     val extendHomeAppsArea: Boolean = false,
     val bottomWidgetType: String = "quote",
+    val weatherData: WeatherData = WeatherData(),
+    val weatherLoading: Boolean = false,
     val shortcutLeftIcon: Constants.ShortcutIcon = Constants.ShortcutIcon.Search,
     val shortcutLeftAction: Constants.Action = Constants.Action.Search,
     val shortcutRightIcon: Constants.ShortcutIcon = Constants.ShortcutIcon.Phone,
@@ -481,6 +485,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         extendHomeAppsArea = prefs.extendHomeAppsArea,
         // Bottom widget + Android AppWidget hosting
         bottomWidgetType = prefs.bottomWidgetType,
+        weatherData = WeatherData(
+            city = prefs.weatherCacheCity,
+            temp = prefs.weatherCacheTemp,
+            unit = prefs.weatherUnit,
+            description = prefs.weatherCacheDesc,
+            weatherCode = prefs.weatherCacheCode,
+            humidity = prefs.weatherCacheHumidity,
+            timestamp = prefs.weatherCacheTime,
+            isSuccess = prefs.weatherCacheCity.isNotBlank() || prefs.weatherCacheTime > 0
+        ),
         shortcutLeftIcon = prefs.shortcutLeftIcon,
         shortcutLeftAction = prefs.shortcutLeftAction,
         shortcutRightIcon = prefs.shortcutRightIcon,
@@ -856,6 +870,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (prefs.bottomWidgetType == Constants.BottomWidgetType.TotalUsage.value) {
             loadDailyTotalUsage()
         }
+        if (prefs.bottomWidgetType == Constants.BottomWidgetType.Weather.value) {
+            fetchWeather()
+        }
     }
 
     // ==============================================================================
@@ -962,7 +979,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             PrefKeys.SHOW_QUOTE -> currentState.copy(showQuote = prefs.showQuote)
             PrefKeys.SHOW_AUDIO_WIDGET -> currentState.copy(showAudioWidget = prefs.showAudioWidgetEnabled)
             PrefKeys.SHOW_ANDROID_WIDGET -> currentState.copy(showAndroidWidget = prefs.showAndroidWidget)
-            PrefKeys.BOTTOM_WIDGET_TYPE -> currentState.copy(bottomWidgetType = prefs.bottomWidgetType, showQuote = prefs.showQuote, showAndroidWidget = prefs.showAndroidWidget)
+            PrefKeys.BOTTOM_WIDGET_TYPE -> {
+                if (prefs.bottomWidgetType == Constants.BottomWidgetType.Weather.value) {
+                    fetchWeather()
+                }
+                currentState.copy(bottomWidgetType = prefs.bottomWidgetType, showQuote = prefs.showQuote, showAndroidWidget = prefs.showAndroidWidget)
+            }
+            PrefKeys.WEATHER_UNIT, PrefKeys.WEATHER_CUSTOM_CITY -> {
+                fetchWeather(forceRefresh = true)
+                currentState
+            }
             PrefKeys.ANDROID_WIDGET_ID -> currentState.copy(androidWidgetId = prefs.androidWidgetId)
             PrefKeys.ANDROID_WIDGET_HEIGHT -> currentState.copy(androidWidgetHeight = prefs.androidWidgetHeight)
             PrefKeys.ANDROID_WIDGET_MARGIN_START -> currentState.copy(androidWidgetMarginStart = prefs.androidWidgetMarginStart)
@@ -1458,6 +1484,32 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         )
         if (type == Constants.BottomWidgetType.TotalUsage.value) {
             loadDailyTotalUsage()
+        }
+        if (type == Constants.BottomWidgetType.Weather.value) {
+            fetchWeather()
+        }
+    }
+
+    fun fetchWeather(forceRefresh: Boolean = false) {
+        viewModelScope.launch {
+            _homeUiState.value = _homeUiState.value.copy(weatherLoading = true)
+            val unit = prefs.weatherUnit
+            val customCity = prefs.weatherCustomCity
+            val result = WeatherRepository.fetchWeather(customCity = customCity, unit = unit)
+            if (result.isSuccess) {
+                prefs.weatherCacheCity = result.city
+                prefs.weatherCacheTemp = result.temp
+                prefs.weatherCacheDesc = result.description
+                prefs.weatherCacheCode = result.weatherCode
+                prefs.weatherCacheHumidity = result.humidity
+                prefs.weatherCacheTime = result.timestamp
+            }
+            _homeUiState.value = _homeUiState.value.copy(
+                weatherData = if (result.isSuccess) result else _homeUiState.value.weatherData.copy(
+                    errorMessage = result.errorMessage
+                ),
+                weatherLoading = false
+            )
         }
     }
 
