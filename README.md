@@ -18,7 +18,7 @@
 
 </div>
 
-[Documentation](DOCUMENTATION.md) | [Video demo](https://www.youtube.com/watch?v=dAmHJ5aFLWA)
+[Documentation](DOCUMENTATION.md) | [English](README.md) | [简体中文](README_CN.md) | [Video demo](https://www.youtube.com/watch?v=dAmHJ5aFLWA)
 
 # Tested on Android 10 to 16.
 
