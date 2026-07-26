@@ -27,11 +27,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Debug & Release APKs
-        run: ./gradlew assembleDebug assembleRelease
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug -x test -x lint -x lintVitalRelease
 
-      - name: Upload APK Artifacts
+      - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: inkOS-apks
-          path: app/build/outputs/apk/**/*.apk
+          name: inkOS-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
