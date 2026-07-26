@@ -21,17 +21,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Generate keystore for build
+        run: |
+          keytool -genkeypair -v -keystore $GITHUB_WORKSPACE/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug
+      - name: Build Release APK
+        env:
+          KEYSTORE_FILE: ${{ github.workspace }}/debug.keystore
+          KEYSTORE_PASSWORD: android
+          KEY_ALIAS: androiddebugkey
+          KEY_PASSWORD: android
+        run: ./gradlew assembleRelease --stacktrace
 
-      - name: Upload Debug APK
+      - name: Upload Release APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: inkOS-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: inkOS-apk
+          path: app/build/outputs/apk/release/*.apk
