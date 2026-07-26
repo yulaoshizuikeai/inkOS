@@ -28,10 +28,30 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --warning-mode all
+        run: |
+          ./gradlew assembleDebug 2>&1 | tee build_output.txt
+          EXIT_CODE=${PIPESTATUS[0]}
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "::group::Build Failure - Last 200 lines"
+            tail -200 build_output.txt
+            echo "::endgroup::"
+            echo "::error::Build failed - see above for details"
+            
+            echo "::group::Checking for specific errors"
+            grep -E "(error:|FAILURE|Could not resolve|Unresolved reference|cannot find)" build_output.txt | head -50 || true
+            echo "::endgroup::"
+            exit $EXIT_CODE
+          fi
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: inkOS-debug-apk
           path: app/build/outputs/apk/debug/*.apk
+
+      - name: Upload Build Log on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-failure-log
+          path: build_output.txt
